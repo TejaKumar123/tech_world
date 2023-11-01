@@ -1,18 +1,38 @@
+<?php
+/*$password="Geeks123.,";
+$hashed_pass=password_hash($password,PASSWORD_DEFAULT);
+setcookie("hash_password",$hashed_pass,time()-1,);*/
+//setcookie("user","john",time()-1);
+/*
+$exco=$_COOKIE['hash_password'];
+if(password_verify("Geeks123.,",$exco)){
+    echo "<script>alert('$exco')</script>";
+}
+*/
+
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
 <title>TECH WORLD</title>
 <link rel="icon" href="icons/company_logo2.png">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="index.css">
 <script src="index.js"></script>
 
 </head>
+<?php
+    include "connect.php";
+    include "email_sending.php";
+    include "login_verification.php";
+    $login_check=login_or_not();
 
-<body oncontextmenu="return true" onscroll="scrolling()" >
+?>
 
+<body oncontextmenu="return true" >
 
+<!---
 <div id="entry">
 	<div id="container">
 		<img src="icons/company_logo.png">
@@ -20,7 +40,117 @@
 
 	</div>
 </div>
+---->
 
+<?php
+    //create table users(fullname varchar(50),username varchar(20) unique,email varchar(50) primary key,password varchar(30) not null);
+    if(isset($_COOKIE["timeouttechworld"])){
+        if($_COOKIE["timeouttechworld"]==-1){
+            $alerting_message="5 minutes completed for sign up.so try again";
+            $text1="Time Out";
+            $image="timeout";
+            $color="yellow";
+        }
+    }
+    if(isset($_COOKIE["logintechworld"])){
+        if($_COOKIE["logintechworld"]==3){
+            $alerting_message="Sign up successfully completed. You can login now ";
+            $text1="success";
+            $image="success";
+            $color="green";
+        }
+    }
+    if(isset($_POST["signup"])){
+        $fullname=$_POST["fullname"];
+        $username=$_POST["username"];
+        $email=$_POST["email"];
+        $password=$_POST["password"];
+        $sql1="select * from users where email='$email'";
+        $sql2="select * from users where username='$username'";
+        $isemail=mysqli_query($conn,$sql1);
+        $isusern=mysqli_query($conn,$sql2);
+        $alerting_message="";
+        $text1="";
+        $image="";
+        $color="";
+        if(mysqli_num_rows($isemail)>0){
+            //echo "<script>alert('user is already exist')</script>";
+            $alerting_message.="email is already existed";
+            $text1="warning";
+            $image="warning";
+            $color="yellow";
+        }
+        else if(mysqli_num_rows($isusern)>0){
+            $alerting_message.="username is already existed";
+            $text1="warning";
+            $image="warning";
+            $color="yellow";
+        }
+        else{
+            $pass_word=password_hash($password,PASSWORD_DEFAULT);
+            setcookie("fullnametechworld",$fullname,time()+300);
+            setcookie("usernametechworld",$username,time()+300);
+            setcookie("emailtechworld",$email,time()+300);
+            setcookie("passwordtechworld",$pass_word,time()+300);
+            setcookie("logintechworld",1,time()+300);
+            header("Location:verification.php");
+
+
+        }
+    }
+
+    if(isset($_POST["signin"])){
+            $username_email=$_POST['username'];
+            if($_POST["check_user"]=="on"){
+                $sql3="select * from users where username='$username_email'";
+                $user_email="username";
+            }
+            else{
+               $sql3="select * from users where email='$username_email'";
+               $user_email="email";
+            }
+
+            $login_result=mysqli_query($conn,$sql3);
+            if(mysqli_num_rows($login_result)==1){
+                while($row=mysqli_fetch_assoc($login_result)){
+                    if(password_verify($_POST["password"],$row["password"])){
+                        setcookie("techworldloginemailupdate",$_POST["username"],time()+86400);
+                        setcookie("techworldloginpasswordupdate",$_POST["password"],time()+86400);
+                        setcookie("useroremail",$user_email,time()+86400);
+                        $alerting_message="successfully login. Now <b>refresh</b> the page ";
+                        $text1="Success";
+                        $image="success";
+                        $color="green";
+                        header("Location:index.php");
+                    }
+                    else{
+                        $alerting_message="password is incorrect";
+                        $text1="Error";
+                        $image="error";
+                        $color="red";
+                    }
+                    break;
+
+                }
+            }
+            else{
+                $alerting_message="account is not found.please check your username / email / password";
+                $text1="Error";
+                $image="error";
+                $color="red";
+            }
+
+    }
+
+    if(isset($_POST["logout"])){
+        setcookie("techworldloginemailupdate",-1,time()-1);
+        setcookie("techworldloginpasswordupdate",-1,time()-1);
+        setcookie("useroremail",-1,time()-1);
+        header("Location:index.php");
+
+    }
+
+?>
 
 <div id="header">
 
@@ -28,7 +158,7 @@
 		<div id="menuimg">
 			<img src="icons/menu.svg" onclick="close_sidenav(1)" style="width:35px;margin-top:4px" alt="menu" title="menu">
 			<div id="sidenav">
-				<div id="sideimg"><img src="icons/close.png" alt="close" onclick="close_sidenav(0)" style="width:23px;margin-right:10px;color:red;margin-top:5px"></div>
+				<div id="sideimg"><img src="icons/close.png" alt="close" onclick="close_sidenav(0)" style="width:23px;margin-right:10px;color:red;margin-top:5px" /></div>
 				<div id="navmenu">
 					<a hre="#p1" onclick="color_change('pl1','#3a0473','p1')" ><div><li>Home</li></div></a>
 					<a hre="#p2" onclick="color_change('pl2','#06558a','p2')" ><div><li>About Us</li></div></a>
@@ -49,15 +179,21 @@
 				<a hre="#p2" onclick="color_change('pl2','#06558a','p2')" ><li>About Us</li></a>
 				<a hre="#p3" onclick="color_change('pl3','#2f0680','p3')" ><li>Services</li></a>
 				<!---<a href="#p4" onclick="color_change('pl4','#0f7f5d','p4')" ><li>Careers</li></a>--->
-				<a hre="#p5" onclick="color_change('pl5','#2999bf','p5')" ><li>Contact us</li></a>
+				<a hre="#p5" onclick="color_change('pl5','#2999bf','p5')"  ><li>Contact us</li></a>
 		</div>
 		<div id="user">
-			<img src="icons/user.png" onclick="accountopen()" alt="sign in"  style="width:33px">
+			<img src="icons/user.png" onclick="accountopen()" alt="sign in"  style="width:33px;cursor:pointer;" />
 			<div id="account">
-				<a onclick="open_popup('login',1)">Login</a>
-				<a href="edit_profile.html" onclick="accountopen()">Edit profile</a>
-				<a onclick="open_popup('create_account',1)">Create account</a>
-				<a onclick="accountopen()">Logout</a>
+                <?php
+                    if(login_or_not()=="no"){
+                ?>
+    			         <a onclick="open_popup('login',1)">Login</a>
+                         <a onclick="open_popup('create_account',1)">Create account</a>
+                <?php } ?>
+                <?php if(login_or_not()=="yes"){ ?>
+    			 <a href="edit_profile.html" onclick="accountopen()">Edit profile</a>
+				<a onclick="logout()"  id="logout_link">Logout</a>
+            <?php } ?>
 			</div>
 		</div>
 	</div>
@@ -66,39 +202,45 @@
 			<!-------header ending------->
 
 			<!-------login pop up----->
+
 <div id="account_popup"  onclick="cancelpop(event)">
 	<div id="login" onclick="stoppro(event)">
 		<li id="cancel" onclick="open_popup('login',0)">&times;</li>
 		<li id="heading" >Login</li>
-		<form autocomplete="off">
+		<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" autocomplete="off">
 			<label for="name">Username/Email:</label><br>
 			<input type="text" name="username" id="name" placeholder="Type your username/email" required></input>
+            <label for="check_user" style="user-select:none;" >If username:</label><input type="checkbox" id="check_user" value="on" name="check_user"><br/>
 			<label for="password">Password:</label><br>
-			<input type="password" name="passsword" id="password" placeholder="Type your password" required></input>
-			<a href="#" style="margin-left:7px;color:blue;text-decoration:none">Forgot Password?</a>
-			<input type="submit" name="submit" value="Login"></input>
+			<input type="password" name="password" id="password" placeholder="Type your password" required></input>
+			<a href="#" style="margin-left:7px;color:blue;text-decoration:none;">Forgot Password?</a>
+			<input type="submit" name="signin" value="Login"></input>
 		</form>
 	</div>
 	<div id="create_account" onclick="stoppro(event)" >
 		<li id="cancel" onclick="open_popup('create_account',0)">&times;</li>
 		<li id="heading">Sign Up</li>
-		<form autocomplete="off">
+		<form action="<?php echo $_SERVER['PHP_SELF']?>" method="POST"  onsubmit="return validate_signup()"  autocomplete="off">
 			<label for="name1">Full Name:</label><br>
-			<input type="text" name="username" id="name1" placeholder="Type your fullname" required></input>
-			<label for="username">Username:</label><br>
-			<input type="text" name="username" id="username" placeholder="Type your username" required></input>
-			<label for="email1">Email:</label>
-			<input type="email" id="email1" name="email" placeholder="Type your email address" required></input>
-			<label for="password1">Password:</label><br>
-			<input type="password" name="passsword" id="password1" required></input>
-			<label for="rpassword">Repeat Password:</label><br>
-			<input type="password" name="passsword" id="rpassword" required></input>
-			<input type="checkbox" name="agree" id="check" value="agree" >
-			<label for="check">I agree to the <b>Terms of user</b></label>
-			<input type="submit" name="submit" value="Sign Up" style="margin-top:18px;" ></input>
+			<input type="text" name="fullname" id="name1" placeholder="Type your fullname" value="" maxlength="50"></input>
+			<label for="username">Username:<span style="color:red;">*</span></label><br>
+			<input type="text" name="username" id="username" placeholder="Type your username" maxlength="20" value="" required></input>
+			<label for="email1">Email:<span style="color:red;">*</span></label>
+			<input type="email" id="email1" name="email" placeholder="Type your email address" maxlength="50" required></input>
+			<label for="password1">Password:<span style="color:red;">*</span></label><br>
+			<input type="password" name="password" id="password1" minlength="8" maxlength="30" required></input>
+			<label for="rpassword">Repeat Password:<span style="color:red;">*</span></label><br>
+			<input type="password" name="rename_password" id="rpassword" required></input>
+			<input type="checkbox" name="agree" id="check" value="agree" required ></input>
+			<label for="check" style="user-select:none;">I agree to the <b>Terms of user</b></label>
+			<input type="submit" name="signup" value="Sign Up" id="signup_button" style="margin-top:18px;" ></input>
 		</form>
 	</div>
 </div>
+
+<form action="<?php echo $_SERVER['PHP_SELF']?>"  method="post" style="display:none;">
+    <input type="submit" value="logout" name="logout" id="logout_form">
+</form>
 
 
 			<!-------login pop up ending------>
@@ -116,14 +258,27 @@
 <div id="pages_box">
 	<div id="pages_container">
 	---->
+    <?php
+        if(!empty($alerting_message)){
+            //echo "<script>alert('$slerting_message')</script>";
+    ?>
+        <div id="alerting" style="box-shadow:0px 1px 10px <?= $color?>;">
+            <div><img src="icons/notification/<?= $image ?>.png" id="img1" /></div>
+            <div id="texts"><b><?= $text1 ?></b><br><li><?= $alerting_message ?></li></div>
+            <img src="icons/close.png" id="img2" onclick="close_alert()" />
+        </div>
+    <?php } ?>
+    <?php
+    //if(login_or_not()=="no"){
+    ?>
 		<div id="p1" class="page">
-			<!---<div id="quotdiv">  ---Quotation div----->
+			<!---<div id="quotdiv">  Quotation div----->
 				<!---<div id="backgro"></div>
 				<div id="front">--->
 				<div id="quot">
-						<li style="list-style-type:none;font-size:500%;text-shadow:1px 2px 0px white;color:#000;margin:25px 0px 5px 10px;">Give Your Site <br>A New Look!</li>
-						<p style="color:#fff;font-size:140%;text-shadow:0px 1px 5px black;font-weight:600;line-height:30px;margin-left:13px;">TECH WORLD can create anything in the world of technology </p>
-						<div id="butt" onclick="openwehave()" >What We Have &rarr;</div>
+						<li style="list-style-type:none;font-size:500%;text-shadow:1px 2px 0px black;color:#fff;margin:25px 0px 5px 10px;text-align:center;">Give Your Site <br>A New Look!</li>
+						<p style="color:#fff;font-size:140%;text-shadow:0px 1px 5px black;font-weight:600;line-height:30px;margin-left:13px;text-align:center;">TECH WORLD can create anything in the world of technology </p>
+						<div id="butt" onclick="openwehave()" >What We Have &gt;&gt;</span></div>
 				</div>
 				<div id="wehave">
 						<li style="margin-top:20px">TECHNICAL SKILLS</li>
@@ -135,14 +290,14 @@
 				<!---</div>
 			</div>--->
 		</div>
-
+        <?php //} ?>
 		<div id="p2" class="page">
 			<!---<div id="backgro1"></div>
 			<div id="front1">--->
 			<div id="p2div">
 					<div id="aboutus1">
-						<li style="list-style-type:none;text-shadow:1px 2px 0px white;font-size:330%;color:black;font-weight:bold;text-align:center;word-spacing:6px;margin-top:20px;">WHAT WE DO?</li>
-						<li style="list-style-type:none;color:black;font-size:135%;text-align:center;font-weight:600;margin-top:5px;">Our modest list of services to suit all your digital needs</li>
+						<li style="list-style-type:none;text-shadow:1px 2px 0px black;font-size:330%;color:white;font-weight:bold;text-align:center;word-spacing:6px;margin-top:20px;">WHAT WE DO?</li>
+						<li style="list-style-type:none;color:white;font-size:135%;text-align:center;font-weight:600;margin-top:5px;">Our modest list of services to suit all your digital needs</li>
 					</div>
 					<div id="aboutus2">
 						<div class="aboutus3" >
@@ -407,13 +562,13 @@
 						<li id="stayin2">STAY IN TOUCH</li>
 						<div id="contact1_a">
 							<form method="get" autocomplete="on">
-								<input type="text" id="name" name="name" placeholder="Name" required>
+								<input type="text" id="sname" name="name" placeholder="Name" required>
 								<input type="email" placeholder="Email" name="email" required>
 								<input type="text" placeholder="Subject" name="subject" required>
 								<textarea placeholder="Message" name="message"></textarea>
 								<input type="submit" value="SUBMIT" style="background-color:#16255c;border:none;border-radius:0px;cursor:pointer;height:45px;color:white;">
 							</form>
-							<p style="margin-left:15px;font-weight:500;margin-top:35px;color:black;font-size:110%;line-height:1.4;">Feel free to contact us anytime you<br>want if you have any doubt about<br>our services/packages</p>
+							<p style="margin-left:15px;font-weight:500;margin-top:35px;color:white;font-size:110%;line-height:1.4;">Feel free to contact us anytime you<br>want if you have any doubt about<br>our services/packages</p>
 						</div>
 					</div>
 					<div id="contact2">
@@ -427,9 +582,9 @@
 							<li>Nandyal(Dt)</li>
 							<li>Andhra Pradesh</li>
 							<li>India - 518134</li>
-							<li style="margin-top:25px;font-size:100%;font-weight:normal">
-								<a href="#"><img src="icons/instagram.png" style="width:22px;transition:0.2s;background-color:black;margin-right:15px;" alt="instagram"></a>
-								<a href="#"><img src="icons/linkedin.png" style="width:23px;transition:0.2s;background-color:black;" alt="linkedin"></a><li>
+							<li style="margin-top:15px;letter-spacing:7px;">
+								<a href="#"><span class="ionicon icon1"><ion-icon name="logo-instagram"></ion-icon></span></a>
+								<a href="#"><span class="ionicon icon2"><ion-icon name="logo-linkedin"></ion-icon></span></a></li>
 							<li>Copyright &copy; 2022 Techworld</li>
 
 						</div>
@@ -440,7 +595,8 @@
 
 	<!--</div>
 </div>--->
-
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
 </body>
 </html>

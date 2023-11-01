@@ -1,4 +1,4 @@
-
+/*
 setTimeout(techanime,1100);
 techstr="Tech  World";
 nextlet=0;
@@ -16,11 +16,59 @@ function techanime(){
 function close_entry(){
 	document.getElementById("entry").style.display="none";
 }
+*/
+
+function pass_valid(pass1,pass2){
+	let a=pass1,b=pass2;
+	if(a!=b){
+		return "Password didn't match";
+	}
+	else{
+		if(a.length<8){
+			return "password length must be atleast 8";
+		}
+		else {
+
+			let upper,lower,digit,special;
+
+			if(/[A-Z]/.test(a)){
+				upper=a.match(/[A-Z]/g).length;
+			}
+			else{return "password should contain uppercase letters"}
+			if(/[a-z]/.test(a)){
+				lower=a.match(/[a-z]/g).length;
+			}
+			else{return "password should contain lowercase letters"}
+			if(/[0-9]/.test(a)){
+				digit=a.match(/[0-9]/g).length;
+			}
+			else{return "password should contain uppercase letters"}
+			if(a.length==upper+lower+digit){
+				return "password should contain special characters";
+			}
+
+		}
+	}
+	return true;
+}
+
+function validate_signup(){
+	//password validation
+	let pass1=document.getElementById("password1").value;
+	let pass2=document.getElementById("rpassword").value;
+	let pvalid=pass_valid(pass1,pass2);
+	if(pvalid!=true){
+		alert(pvalid);
+		return false;
+	}
+
+	return true;
+}
 
 a=0
 function accountopen(){
 if ((a/2)==0){
-document.getElementById("account").style.height="132px";
+document.getElementById("account").style.height="66px";
 a=a+1;
 	}
 else{
@@ -60,7 +108,7 @@ bookmark=k;
 document.getElementById(k).style.backgroundColor=m;
 document.getElementById(k).style.transform="scale(1.2,1.2)";*/
 document.getElementById("sidenav").style.backgroundColor=m;
-document.getElementById("account").style.backgroundColor=m;
+//document.getElementById("account").style.backgroundColor=m;
 //document.getElementById(n).style.backgroundAttachment="scroll";
 //document.getElementById(backg).style.backgroundAttachment="fixed";
 //backg=n;
@@ -80,9 +128,9 @@ s[an].style.animation="height 0.7s linear 0s 1 normal";
 if (n=="p1" || n=="p3"){
 m=m+"00";
 }*/
-document.getElementById("header").style.backgroundColor=m;	
+//document.getElementById("header").style.backgroundColor=m;
 }
-
+/*
 career=0
 function open_career(cdiv){
 if (career==0){
@@ -98,18 +146,18 @@ document.getElementById(career).style.height="0px";
 document.getElementById(cdiv).style.height="510px";
 career=cdiv
 	}
-}
+}*/
 
 popup=0
-function open_popup(pop,m){
-if (m==1){
+function open_popup(pop,flag){
+if (flag==1){
 document.getElementById("account_popup").style.display="flex";
 document.getElementById(pop).style.display="block";
 document.getElementById(pop).style.animation="scale 0.35s linear 0s 1 normal"
 document.getElementById("account").style.height="0px";
 a=a-1
 	}
-	
+
 else{
 document.getElementById("account_popup").style.display="none";
 document.getElementById(pop).style.display="none";
@@ -175,7 +223,7 @@ document.getElementById(k).style.animation="";
 d=0;
 
 	}
-	
+
 else{
 document.getElementById(k).style.display="block";
 document.getElementById(service).style.display="none";
@@ -186,7 +234,7 @@ document.getElementById(service).style.animation="";
 m=l
 service=k;
 	}
-	
+
 }
 
 function stoppro(event){
@@ -199,12 +247,6 @@ function cancelpop(event){
 	eve.children[1].firstElementChild.click();
 }
 
-
-function closemenu(event){
-	if(a!=0){
-		accountopen();
-	}
-}
 
 var scrol={1:"#3a0473",2:"#06558a",3:"#2f0680",4:"#2999bf"};
 function scrolling(){
@@ -221,4 +263,47 @@ function scrolling(){
 	//document.getElementById("login").style.backgroundColor=m;
 	//document.getElementById("create_account").style.backgroundColor=m;
 
+}
+
+function close_alert(){
+		document.getElementById("alerting").style.animation="alert_anim1 0.2s ease-in-out 0s 1 reverse";
+		document.getElementById("alerting").style.top="-100px";
+}
+
+/*
+window.onload=alert_fun;
+function alert_fun(){
+	let a=document.getElementById("alerting");
+	if(a.children[0].innerHTML==""){
+		a.style.display="none";
+	}
+}
+*/
+function closemenu(){
+	if(a!=0){
+		accountopen();
+	}
+}
+
+
+function close_opens(){
+	/*alert("hi");
+	if(event.target.id!="account"){
+		closemenu();
+	}*/
+	closemenu();
+}
+
+function remove_closeopens(){
+	document.documentElement.removeEventListener("click",close_opens);
+}
+function add_closeopens(){
+	alert("hi");
+	document.documentElement.addEventListener("click",close_opens);
+}
+
+function logout(){
+	accountopen();
+	document.getElementById("logout_form").click();
+	document.getElementById("logout_form").click();
 }
