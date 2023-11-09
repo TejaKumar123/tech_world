@@ -47,7 +47,13 @@ function sendemail(){
 
     }
     catch(Exception $excep){
-        setcookie("error_in_email",0,time()+300);
+        setcookie("error_in_email",0,time()+5);
+        setcookie("fullnametechworld",1,time()-1);
+        setcookie("usernametechworld",1,time()-1);
+        setcookie("emailtechworld",1,time()-1);
+        setcookie("passwordtechworld",1,time()-1);
+        setcookie("logintechworld",1,time()-1);
+        setcookie("passwordforlogin",1,time()-1);
         header("Location:index.php");
         exit();
     }

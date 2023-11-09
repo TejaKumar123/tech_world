@@ -44,6 +44,33 @@ if(password_verify("Geeks123.,",$exco)){
 
 <?php
     //create table users(fullname varchar(50),username varchar(20) unique,email varchar(50) primary key,password varchar(30) not null);
+    if(isset($_COOKIE["techworldsignincheck"])){
+        if($_COOKIE["techworldsignincheck"]==1){
+            $alerting_message="You have successfully signin.";
+            $text1="Signin success";
+            $image="success";
+            $color="green";
+        }
+    }
+
+    if(isset($_COOKIE["techworldlogoutcheck"])){
+        if($_COOKIE["techworldlogoutcheck"]==1){
+            $alerting_message="You have successfully Logout.";
+            $text1="Logout";
+            $image="logout";
+            $color="green";
+        }
+    }
+
+    if(isset($_COOKIE["error_in_email"])){
+        if($_COOKIE["error_in_email"]==0){
+            $alerting_message="Something went wrong. Email can't send. Please check your network connection";
+            $text1="Network error";
+            $image="network";
+            $color="red";
+        }
+    }
+
     if(isset($_COOKIE["timeouttechworld"])){
         if($_COOKIE["timeouttechworld"]==-1){
             $alerting_message="5 minutes completed for sign up.so try again";
@@ -117,10 +144,7 @@ if(password_verify("Geeks123.,",$exco)){
                         setcookie("techworldloginemailupdate",$_POST["username"],time()+86400);
                         setcookie("techworldloginpasswordupdate",$_POST["password"],time()+86400);
                         setcookie("useroremail",$user_email,time()+86400);
-                        $alerting_message="successfully login. Now <b>refresh</b> the page ";
-                        $text1="Success";
-                        $image="success";
-                        $color="green";
+                        setcookie("techworldsignincheck",1,time()+10);
                         header("Location:index.php");
                     }
                     else{
@@ -146,6 +170,7 @@ if(password_verify("Geeks123.,",$exco)){
         setcookie("techworldloginemailupdate",-1,time()-1);
         setcookie("techworldloginpasswordupdate",-1,time()-1);
         setcookie("useroremail",-1,time()-1);
+        setcookie("techworldlogoutcheck",1,time()+10);
         header("Location:index.php");
 
     }

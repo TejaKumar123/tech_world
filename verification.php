@@ -9,7 +9,7 @@ if($_COOKIE["logintechworld"]==1){
 }
 
 if(!isset($_COOKIE["logintechworld"])){
-    setcookie("timeouttechworld",-1,time()+60);
+    setcookie("timeouttechworld",-1,time()+10);
     header("Location:index.php");
 }
 
