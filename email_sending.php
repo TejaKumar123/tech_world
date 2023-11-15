@@ -15,7 +15,7 @@ function sendemail(){
         $mail->Host="smtp.gmail.com";
         $mail->SMTPAuth=true;
         $mail->Username="nkumarteja123@gmail.com";
-        $mail->Password="yrgf hzhl eopm tccv";
+        $mail->Password="yrgf hzhl eopm";
         $mail->SMTPSecure="tls";
         $mail->Port=587;
 
