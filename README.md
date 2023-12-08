@@ -26,10 +26,12 @@
 <img src="readme/e.png">
 <img src="readme/f.png">
 <h2>SignIn page: </h2>
+<p>Here user can signin using email or username.</p>
 <img src="readme/g.png">
 <h2>SignUp page: </h2>
 <img src="readme/h.png">
 <h2>Email verification page: </h2>
+<p>This is email verification page here user shoud enter the otp within 5 minutes. Otherwise timeout alert will be displayed.</p>
 <img src="readme/i.png">
 <h3>Sent Mail UI: </h3>
 <img src="readme/j.png">
