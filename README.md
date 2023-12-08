@@ -1,4 +1,4 @@
-# tech_world
+# Tech World
 <h2>Technologies used: </h2>
 <h3>Frontend: </h3>
 <ul>
