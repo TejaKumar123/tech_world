@@ -11,7 +11,7 @@
 	<li>PHP</li>
 	<li>MySQL database</li>
 	<li>XAMPP server</li>
-	<li>PHP Mailer to send email for otp verification</li>
+	<li>PHP Mailer to send otp for email verification</li>
 </ul>
 <h2>Description: </h2>
 <p>This is a company website where user can visit and get to know about the company</p>
