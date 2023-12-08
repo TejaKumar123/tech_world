@@ -13,3 +13,7 @@
 	<li>XAMPP server</li>
 	<li>PHP Mailer to send email for otp verification</li>
 </ul>
+<h2>Description: </h2>
+<p>This is a company website where user can visit and get to know about the company</p>
+<h2>Home page: </h2>
+<img src="readme/a.png">
