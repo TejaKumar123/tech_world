@@ -14,7 +14,7 @@
 	<li>PHP Mailer to send otp for email verification</li>
 </ul>
 <h2>Description: </h2>
-<p>This is a company website where user can visit and get to know about the company</p>
+<p>This is a company website where user can visit and get to know about the company. User can create an account and signin into this website.</p>
 <h2>Home page: </h2>
 <img src="readme/a.png">
 <h2>AboutUs page: </h2>
